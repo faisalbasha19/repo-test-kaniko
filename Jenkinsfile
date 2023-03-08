@@ -2,7 +2,7 @@ pipeline {
   environment {
     registry = "qa-docker-nexus.mtnsat.io"
     registryCredential = 'nexus'
-    PASSWORD = ${PASSWORD}
+    PASSWORD = "${PASSWORD}"
   }
   agent {
     kubernetes {
