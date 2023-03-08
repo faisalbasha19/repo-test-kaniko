@@ -90,6 +90,9 @@ pipeline {
     stage('Docker build'){
       steps {
         container('docker-cmds'){
+          sh 'docker --version'
+          sh 'ls -ahl'
+          sh 'pwd'
           sh 'docker build -f Dockerfile -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
         }
       }
