@@ -1,8 +1,7 @@
 pipeline {
   environment {
-    registry = "qa-docker-nexus.mtnsat.io/dockerrepo"
-    registryCredential = 'nexus'
-    
+    registry = "qa-docker-nexus.mtnsat.io"
+    registryCredential = 'nexus'    
   }
   agent {
     kubernetes {
@@ -91,7 +90,16 @@ pipeline {
          sh 'npm version'
         }
       }
-    }    
+    }
+   stage('Docker login'){
+         steps {
+             container('docker-cmds') {
+               withCredentials([usernamePassword(credentialsId: '${registryCredential}', passwordVariable: 'password', usernameVariable: 'username')]) {
+                 sh 'docker login -u username -p password ${registry}'                               
+                  }
+                }
+         }         
+      }    
     stage('Docker build'){
       steps {
         container('docker-cmds'){
