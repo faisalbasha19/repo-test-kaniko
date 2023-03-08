@@ -2,6 +2,7 @@ pipeline {
   environment {
     registry = "qa-docker-nexus.mtnsat.io/dockerrepo"
     registryCredential = 'nexus'
+    
   }
   agent {
     kubernetes {
@@ -70,7 +71,11 @@ pipeline {
 '''
     }
   }
-  stages {
+  stages {    
+    stage('Initialize'){
+        def dockerHome = tool 'myDocker'
+        env.PATH = "${dockerHome}/bin:${env.PATH}"
+    }    
     stage('Build with Kaniko') {
       steps {
         git 'https://github.com/jenkinsci/docker-inbound-agent.git'
