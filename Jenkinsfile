@@ -94,8 +94,8 @@ pipeline {
    stage('Docker login'){
          steps {
              container('docker-cmds') {
-               withCredentials([usernamePassword(credentialsId: '${registryCredential}', passwordVariable: 'password', usernameVariable: 'username')]) {
-                 sh 'docker login -u username -p password ${registry}'                               
+               withCredentials([usernamePassword(credentialsId: '${env.registryCredential}', passwordVariable: 'password', usernameVariable: 'username')]) {
+                 sh 'docker login -u username -p password ${env.registry}'                               
                   }
                 }
          }         
