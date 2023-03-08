@@ -7,6 +7,18 @@ pipeline {
         kind: Pod
         spec:
           containers:
+          - name: maven
+            image: maven:alpine
+            imagePullPolicy: Always
+            command:
+            - cat
+            tty: true
+          - name: node
+            image: node:16-alpine3.12
+            imagePullPolicy: Always
+            command:
+            - cat
+            tty: true
           - name: kaniko
             image: gcr.io/kaniko-project/executor:v1.6.0-debug
             imagePullPolicy: Always
@@ -34,7 +46,21 @@ pipeline {
       steps {
         git 'https://github.com/jenkinsci/docker-inbound-agent.git'
         sh '/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=qa-docker-nexus.mtnsat.io/dockerrepo/testimage:1'
+      }      
+    }
+    stage('run maven'){
+      steps {
+        container('maven'){
+         sh 'mvn -version'
+        }
       }
     }
+    stage('run node'){
+      steps {
+        container('node'){
+         sh 'npm version'
+        }
+      }
+    }    
   }
 }
