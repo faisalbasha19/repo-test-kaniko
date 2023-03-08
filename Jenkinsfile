@@ -70,7 +70,7 @@ pipeline {
     }    
     stage('Docker build'){
       steps {
-        container('Docker'){
+        container('docker'){
           sh 'docker build -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
         }
       }
