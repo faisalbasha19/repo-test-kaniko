@@ -7,6 +7,12 @@ pipeline {
         kind: Pod
         spec:
           containers:
+          - name: docker
+            image: docker:latest
+            imagePullPolicy: Always
+            command:
+            - cat
+            tty: true
           - name: maven
             image: maven:alpine
             imagePullPolicy: Always
@@ -62,5 +68,12 @@ pipeline {
         }
       }
     }    
+    stage('Docker build'){
+      steps {
+        container('Docker'){
+          sh 'docker build -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
+        }
+      }
+    }        
   }
 }
