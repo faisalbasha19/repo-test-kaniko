@@ -7,12 +7,27 @@ pipeline {
         kind: Pod
         spec:
           containers:
-          - name: docker
-            image: docker:latest
-            imagePullPolicy: Always
-            command:
-            - cat
-            tty: true
+          - name: docker-cmds 
+            image: docker:19.03.1
+            command: ['sleep', '99d'] 
+            resources:
+              requests: 
+                  cpu: 10m 
+                  memory: 256Mi 
+            env: 
+            - name: DOCKER_HOST 
+              value: tcp://localhost:2375
+          - name: dind-daemon 
+            image: docker:19.03.1-dind
+            resources: 
+              requests: 
+                  cpu: 20m 
+                  memory: 512Mi 
+            securityContext: 
+              privileged: true 
+            volumeMounts: 
+            - name: docker-graph-storage 
+              mountPath: /var/lib/docker 
           - name: maven
             image: maven:alpine
             imagePullPolicy: Always
@@ -36,6 +51,10 @@ pipeline {
               - name: jenkins-docker-cfg
                 mountPath: /kaniko/.docker
           volumes:
+          - name: docker-graph-storage 
+            hostPath:
+              path: /tmp
+              type: Directory
           - name: jenkins-docker-cfg
             projected:
               sources:
