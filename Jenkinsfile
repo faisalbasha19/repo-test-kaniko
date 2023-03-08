@@ -1,4 +1,8 @@
 pipeline {
+  environment {
+    registry = "qa-docker-nexus.mtnsat.io/dockerrepo"
+    registryCredential = 'nexus'
+  }
   agent {
     kubernetes {
       //cloud 'kubernetes'
