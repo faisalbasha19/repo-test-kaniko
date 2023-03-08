@@ -1,7 +1,8 @@
 pipeline {
   environment {
     registry = "qa-docker-nexus.mtnsat.io"
-    registryCredential = 'nexus'    
+    registryCredential = 'nexus'
+    password = ${password}
   }
   agent {
     kubernetes {
@@ -95,7 +96,7 @@ pipeline {
          steps {
              container('docker-cmds') {
                withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'password', usernameVariable: 'username')]) {
-                 sh 'docker login -u admin -p ${password} qa-docker-nexus.mtnsat.io'                               
+                 sh 'docker login -u admin -p ${PASSWORD} qa-docker-nexus.mtnsat.io'                               
                   }
                 }
          }         
