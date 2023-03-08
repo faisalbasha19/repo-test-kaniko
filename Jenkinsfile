@@ -95,7 +95,7 @@ pipeline {
          steps {
              container('docker-cmds') {
                withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'password', usernameVariable: 'username')]) {
-                 sh 'docker login -u admin -p Helxxe1234$$ qa-docker-nexus.mtnsat.io'                               
+                 sh 'docker login -u admin -p ${password} qa-docker-nexus.mtnsat.io'                               
                   }
                 }
          }         
