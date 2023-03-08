@@ -94,8 +94,8 @@ pipeline {
    stage('Docker login'){
          steps {
              container('docker-cmds') {
-               withCredentials([usernamePassword(credentialsId: '${env.registryCredential}', passwordVariable: 'password', usernameVariable: 'username')]) {
-                 sh 'docker login -u username -p password ${env.registry}'                               
+               withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'password', usernameVariable: 'username')]) {
+                 sh 'docker login -u username -p password qa-docker-nexus.mtnsat.io'                               
                   }
                 }
          }         
