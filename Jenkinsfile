@@ -10,7 +10,6 @@ def tag = "$repoName:latest"
 
 podTemplate(label: label,
         containers: [
-                containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:alpine'),
                 containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
             ],
             volumes: [
