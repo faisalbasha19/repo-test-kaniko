@@ -118,6 +118,11 @@ pipeline {
           sh 'cd /var/run/'
           sh 'pwd'
           sh 'ls -ahl'
+          sh 'groupadd docker'
+          sh 'usermod -a -G docker admin'
+          sh 'id'
+          sh 'chown -R docker:docker /var/run/docker.socket'
+          sh 'chmod 666 /var/run/docker.socket'
           sh 'dockerd --iptables=false'
           sh 'docker build -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
         }
