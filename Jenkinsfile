@@ -107,6 +107,10 @@ pipeline {
           sh 'docker --version'
           sh 'ls -ahl'
           sh 'pwd'
+          sh 'systemctl status docker'
+          sh 'sudo dockerd'
+          sh 'cd /var/run/'
+          sh 'ls -ahl'
           sh 'docker build -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
         }
       }
