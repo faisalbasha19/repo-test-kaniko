@@ -19,20 +19,20 @@ pipeline {
               requests: 
                   cpu: 10m 
                   memory: 256Mi 
-          - name: dind-daemon 
-            image: docker:19.03.1-dind
-            resources: 
-              requests: 
-                  cpu: 20m 
-                  memory: 512Mi 
-            securityContext: 
-              privileged: true 
             env:
             - name: DOCKER_HOST 
               value: tcp://localhost:2375
-            volumeMounts: 
+          - name: dind-daemon 
+            image: docker:20.10-dind
+            resources:
+              requests:
+                  cpu: 20m 
+                  memory: 512Mi 
+            securityContext: 
+              privileged: true
+            volumeMounts:
             - name: docker-graph-storage 
-              mountPath: /var/lib/docker 
+              mountPath: /var/lib/docker
           - name: maven
             image: maven:alpine
             imagePullPolicy: Always
