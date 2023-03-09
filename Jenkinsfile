@@ -110,7 +110,7 @@ pipeline {
           sh 'cd /var/run/'
           sh 'pwd'
           sh 'ls -ahl'
-          sh 'dockerd'
+          sh 'dockerd --iptables=false'
           sh 'docker build -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
         }
       }
