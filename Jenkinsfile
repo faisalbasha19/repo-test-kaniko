@@ -7,7 +7,7 @@ pipeline {
   agent {
     kubernetes {
       //cloud 'kubernetes'
-      defaultContainer 'kaniko'
+      defaultContainer 'docker-cmds'
       yaml '''
         kind: Pod
         spec:
@@ -19,9 +19,6 @@ pipeline {
               requests: 
                   cpu: 10m 
                   memory: 256Mi 
-            env: 
-            - name: DOCKER_HOST 
-              value: tcp://localhost:2375
           - name: dind-daemon 
             image: docker:19.03.1-dind
             resources: 
@@ -30,6 +27,9 @@ pipeline {
                   memory: 512Mi 
             securityContext: 
               privileged: true 
+            env:
+            - name: DOCKER_HOST 
+              value: tcp://localhost:2375
             volumeMounts: 
             - name: docker-graph-storage 
               mountPath: /var/lib/docker 
@@ -72,10 +72,8 @@ pipeline {
     }
   }
   stages {    
-    stage('Build with Kaniko') {
+    stage('Git sCM Checkout') {
       steps {
-        //git 'https://github.com/jenkinsci/docker-inbound-agent.git'
-        //git 'https://github.com/faisalbasha19/repo-test-kaniko.git'
         git branch: 'main', credentialsId: 'gitssh-1', url: 'https://github.com/faisalbasha19/repo-test-kaniko.git'
         //sh '/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=qa-docker-nexus.mtnsat.io/dockerrepo/testimage:1'
       }
