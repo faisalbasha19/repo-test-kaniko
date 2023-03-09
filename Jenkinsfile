@@ -108,8 +108,9 @@ pipeline {
           sh 'ls -ahl'
           sh 'pwd'
           sh 'cd /var/run/'
+          sh 'pwd'
           sh 'ls -ahl'
-          sh 'sudo dockerd'
+          sh 'dockerd'
           sh 'docker build -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
         }
       }
