@@ -111,7 +111,6 @@ pipeline {
           sh 'cat /etc/passwd'
           sh 'id'
           sh 'cat /etc/*release*'
-          sh 'chown -R docker:docker /var/run/docker.socket'
           sh 'chmod 666 /var/run/docker.socket'
           sh 'dockerd --iptables=false'
           sh 'docker build -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
