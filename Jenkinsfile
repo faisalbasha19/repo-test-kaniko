@@ -22,6 +22,9 @@ pipeline {
             env:
             - name: DOCKER_HOST 
               value: tcp://localhost:2375
+            volumeMounts:
+            - name: docker-socket
+              mountPath: /var/run
           - name: dind-daemon 
             image: docker:20.10-dind
             resources:
@@ -30,6 +33,9 @@ pipeline {
                   memory: 512Mi 
             securityContext: 
               privileged: true
+            volumeMounts:
+            - name: docker-socket
+              mountPath: /var/run
             volumeMounts:
             - name: docker-graph-storage 
               mountPath: /var/lib/docker
@@ -56,6 +62,8 @@ pipeline {
               - name: jenkins-docker-cfg
                 mountPath: /kaniko/.docker
           volumes:
+          - name: docker-socket
+            emptyDir: {}
           - name: docker-graph-storage 
             hostPath:
               path: /tmp
