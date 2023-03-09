@@ -5,8 +5,9 @@ def home = "/home/jenkins"
 def workspace = "${home}/workspace/build-docker-jenkins"
 def workdir = "${workspace}/src/localhost/docker-jenkins/"
 
-def repoName = "dockerrepo/test"
+def repoName = "qa-docker-nexus.mtnsat.io/dockerrepo/test"
 def tag = "$repoName:latest"
+def password = "Helxxe1234$$"
 
 podTemplate(label: label,
         containers: [
@@ -23,7 +24,14 @@ podTemplate(label: label,
                     checkout scm
                 }
             }
-
+                
+            stage('Docker Login'){
+                container('docker') {
+                    echo "Building docker image..."
+                    sh "docker login -u admin -p $password qa-docker-nexus.mtnsat.io"
+                }                    
+            }            
+                
             stage('Docker Build') {
                 container('docker') {
                     echo "Building docker image..."
