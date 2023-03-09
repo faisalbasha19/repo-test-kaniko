@@ -7,16 +7,34 @@ def workdir = "${workspace}/src/localhost/docker-jenkins/"
 
 def repoName = "qa-docker-nexus.mtnsat.io/dockerrepo/test"
 def tag = "$repoName:latest"
-def password = "$PASSWORD"
-
-podTemplate(label: label,
-        containers: [
-                containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
-            ],
-            volumes: [
-                hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
-            ],
-        ) {
+def password = "$PASSWORD"podTemplate(yaml: '''
+              apiVersion: v1
+              kind: Pod
+              spec:
+                volumes:
+                - name: docker-socket
+                  emptyDir: {}
+                containers:
+                - name: docker
+                  image: docker:19.03.1
+                  readinessProbe:
+                    exec:
+                      command: [sh, -c, "ls -S /var/run/docker.sock"]
+                  command:
+                  - sleep
+                  args:
+                  - 99d
+                  volumeMounts:
+                  - name: docker-socket
+                    mountPath: /var/run
+                - name: docker-daemon
+                  image: docker:19.03.1-dind
+                  securityContext:
+                    privileged: true
+                  volumeMounts:
+                  - name: docker-socket
+                    mountPath: /var/run
+''') {
     node(label) {
         dir(workdir) {
             stage('Checkout') {
@@ -28,6 +46,7 @@ podTemplate(label: label,
             stage('Docker Login'){
                 container('docker') {
                     echo "Building docker image..."
+                    sh 'docker version'                        
                     sh "docker login -u admin -p $password qa-docker-nexus.mtnsat.io"
                 }                    
             }            
@@ -35,7 +54,7 @@ podTemplate(label: label,
             stage('Docker Build') {
                 container('docker') {
                     echo "Building docker image..."
-                    sh "docker build -t $tag -f jenkins-docker/Dockerfile ."
+                    sh "DOCKER_BUILDKIT=1 docker build --progress plain -t $tag -f jenkins-docker/Dockerfile ."
                 }
             }
         }
