@@ -74,7 +74,8 @@ pipeline {
   stages {    
     stage('Build with Kaniko') {
       steps {
-        git 'https://github.com/jenkinsci/docker-inbound-agent.git'
+        //git 'https://github.com/jenkinsci/docker-inbound-agent.git'
+        git 'https://github.com/faisalbasha19/repo-test-kaniko.git'
         //sh '/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=qa-docker-nexus.mtnsat.io/dockerrepo/testimage:1'
       }
     }
