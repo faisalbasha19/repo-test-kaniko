@@ -107,7 +107,7 @@ pipeline {
           sh 'docker --version'
           sh 'ls -ahl'
           sh 'pwd'
-          sh 'docker build -f Dockerfile -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
+          sh 'docker build -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
         }
       }
     }        
