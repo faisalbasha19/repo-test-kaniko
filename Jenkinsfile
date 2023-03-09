@@ -7,7 +7,7 @@ def workdir = "${workspace}/src/localhost/docker-jenkins/"
 
 def repoName = "qa-docker-nexus.mtnsat.io/dockerrepo/test"
 def tag = "$repoName:latest"
-def password = "Helxxe1234$$"
+def password = "$PASSWORD"
 
 podTemplate(label: label,
         containers: [
