@@ -112,6 +112,7 @@ pipeline {
           sh 'id'
           sh 'cat /etc/*release*'
           sh 'chmod 666 /var/run/docker.sock'
+          sh 'addgroup docker'
           sh 'dockerd --iptables=false'
           sh 'docker build -t qa-docker-nexus.mtnsat.io/dockerrepo/test:1 .'
         }
