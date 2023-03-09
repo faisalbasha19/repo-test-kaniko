@@ -111,8 +111,6 @@ pipeline {
           sh 'cat /etc/passwd'
           sh 'id'
           sh 'cat /etc/*release*'
-          sh 'groupadd docker'
-          sh 'usermod -a -G docker admin'
           sh 'chown -R docker:docker /var/run/docker.socket'
           sh 'chmod 666 /var/run/docker.socket'
           sh 'dockerd --iptables=false'
