@@ -24,7 +24,7 @@ pipeline {
               value: tcp://localhost:2375
             volumeMounts:
             - name: docker-socket
-              mountPath: /var/run
+              mountPath: /var/run/docker.sock
           - name: dind-daemon 
             image: docker:20.10-dind
             resources:
@@ -35,7 +35,7 @@ pipeline {
               privileged: true
             volumeMounts:
             - name: docker-socket
-              mountPath: /var/run
+              mountPath: /var/run/docker.sock
             volumeMounts:
             - name: docker-graph-storage 
               mountPath: /var/lib/docker
@@ -51,19 +51,10 @@ pipeline {
             command:
             - cat
             tty: true
-          - name: kaniko
-            image: gcr.io/kaniko-project/executor:v1.6.0-debug
-            imagePullPolicy: Always
-            command:
-            - sleep
-            args:
-            - 99d
-            volumeMounts:
-              - name: jenkins-docker-cfg
-                mountPath: /kaniko/.docker
           volumes:
           - name: docker-socket
-            emptyDir: {}
+            hostPath:
+              path: /var/run/docker.sock
           - name: docker-graph-storage 
             hostPath:
               path: /tmp
@@ -83,7 +74,6 @@ pipeline {
     stage('Git sCM Checkout') {
       steps {
         git branch: 'main', credentialsId: 'gitssh-1', url: 'https://github.com/faisalbasha19/repo-test-kaniko.git'
-        //sh '/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=qa-docker-nexus.mtnsat.io/dockerrepo/testimage:1'
       }
     }
     stage('run maven'){
@@ -120,6 +110,7 @@ pipeline {
           sh 'ls -ahl'
           sh 'cat /etc/passwd'
           sh 'id'
+          sh 'cat /etc/*release*'
           sh 'groupadd docker'
           sh 'usermod -a -G docker admin'
           sh 'chown -R docker:docker /var/run/docker.socket'
